@@ -10,23 +10,23 @@ class UserCtrl {
 	static Login(req,res) {
 		
 		passport.authenticate('local')(req,res, ()=>{
-
-				const payload = {
-					id: req.user._id,
-					name: req.user.username
+			const payload = {
+				id: req.user._id,
+				email: req.user.email
+			}
+			jwt.sign(payload, config.secret, (err,token) =>{
+				if(err) {
+					throw err
+				}else{
+					return res.json({
+						message: "Login Success",
+						token
+					})
 				}
-				jwt.sign(payload, config.secret, (err,token) =>{
-					if(err) {
-						throw err
-					}else{
-						return res.json({
-							message: "Login Success",
-							token
-						})
-					}
-				})
 			})
-	
+		
+		})
+
 	}
 
 
@@ -40,7 +40,6 @@ class UserCtrl {
 				res.json({message: 'user already exists'})
 			}else{
 				User.register(new User({
-					username: req.body.name,
 					email: req.body.email
 				}), req.body.password, (err,user)=>{
 					if(err) {

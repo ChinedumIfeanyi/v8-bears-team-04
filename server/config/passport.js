@@ -14,12 +14,40 @@ passport.deserializeUser(User.deserializeUser() )
 passport.use(User.createStrategy() )
 
 
+
+// passport.use(new LocalStrategy({
+// 	usernameField: 'email',
+// 	passwordField: 'password'
+// },
+// 	function(email, password, done) {
+// 		return User.findOne({email})
+// 			.then(user => {
+// 				if(!user) {
+// 					return done(null, false, {message: 'incorrect user and password'})
+// 				}
+
+// 				return done(null, user, {
+// 					message: 'login success'
+// 				})
+// 			})
+// 			.catch(err => {
+// 				return done(err)
+// 			})
+// 	}
+// ))
+
+
+
+
+
 exports.verifyUser = passport.authenticate('jwt', {session: false})
 
 const opts = {}
 
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken()
 opts.secretOrKey = config.secret
+
+
 
 
 exports.jwtPassport = passport.use(new JwtStrategy(opts, (jwt_payload, done) =>{
